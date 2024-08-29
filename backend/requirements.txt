@@ -1,0 +1,5 @@
+Flask
+flask-restx
+pymongo
+python-dotenv
+pydantic

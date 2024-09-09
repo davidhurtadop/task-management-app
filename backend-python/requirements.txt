@@ -1,0 +1,7 @@
+Flask
+Flask-JWT-Extended
+pymongo[srv]
+pytest
+pydantic
+pydantic[email]
+pydantic-settings

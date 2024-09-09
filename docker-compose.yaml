@@ -1,0 +1,25 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: task-manager-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+  api:
+    build: ./backend-python
+    container_name: task-manager-app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_DB_URI=mongodb://root:example@localhost:27017/
+      - MONGO_DB_NAME=task-manager-local-db
+      - LOG_LEVEL=DEBUG
+
+volumes:
+  mongo-data:  # Named volume for MongoDB data persistence

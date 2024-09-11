@@ -7,39 +7,37 @@ from src.utils.logging import LoggerFactory
 from flask_jwt_extended import JWTManager
 
 
-class TaskManagerApp:
-    def __init__(self):
-        self.app = Flask(__name__)
-        self.configure_app()
-        self.init_db()
-        self.init_logger()
-        self.init_jwt()
-        self.register_blueprints()
+app = Flask(__name__)
 
-    def configure_app(self):
-        self.app.config.from_object(settings)
+def configure_app():
+    app.config.from_object(settings)
         
+def init_logger():
+    logger = LoggerFactory(__name__,app.config["LOG_LEVEL"])
+    app.logger = logger.get_logger()
+
+def init_db():
+    mongo_client = MongoDbClient(app.config["MONGO_DB_URI"], app.config["MONGO_DB_NAME"])
+    db = mongo_client.get_database()
+    return db
+
+def init_jwt():
+    JWTManager(app)
+
+def register_blueprints():
+    db = init_db()
+    app.register_blueprint(UserRoutes(db, app.logger).blueprint, url_prefix="/api/users")
+    app.register_blueprint(TaskRoutes(db, app.logger).blueprint, url_prefix="/api/tasks")
+
+def run():
+    configure_app()
+    init_logger()
+    init_jwt()
+    register_blueprints()
     
-    def init_logger(self):
-        self.logger = LoggerFactory(__name__,self.app.config["LOG_LEVEL"])
-        self.app.logger = self.logger.get_logger()
-
-    def init_db(self):
-        self.mongo_client = MongoDbClient(self.app.config["MONGO_DB_URI"], self.app.config["MONGO_DB_NAME"])
-        self.db = self.mongo_client.get_database()
-
-    def init_jwt(self):
-        JWTManager(self.app)
-
-    def register_blueprints(self):
-        self.app.register_blueprint(UserRoutes(self.db, self.app.logger).blueprint, url_prefix="/api/users")
-        self.app.register_blueprint(TaskRoutes(self.db, self.app.logger).blueprint, url_prefix="/api/tasks")
-
-    def run(self):
-        print(self.app.url_map)
-        self.app.run(debug=True)
+    print(app.url_map)
+    app.run(debug=True)
 
 
 if __name__ == "__main__":
-    app = TaskManagerApp()
-    app.run()
+    run()

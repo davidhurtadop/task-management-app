@@ -82,16 +82,16 @@ This is a Task Management application that allows users to create, read, update,
 
 ### Week 1: Setup and Authentication
 
-- [ ] Setup project structure and docker infrastructure.
+- [x] Setup project structure and docker infrastructure.
 - [ ] Initialize backend and frontend projects.
 - [ ] Create automatic build scripts.
-- [ ] Implement user authentication and authorization.
+- [x] Implement user authentication and authorization.
 - [ ] Create clear README file with instructions to build/execute.
 
 ### Week 2: Task Management API
 
-- [ ] Design and implement the Task API (CRUD operations).
-- [ ] Set up MongoDB and integrate it with the backend.
+- [X] Design and implement the Task API (CRUD operations).
+- [x] Set up MongoDB and integrate it with the backend.
 - [ ] Implement unit tests for authentication and task management.
 
 ### Week 3: Frontend Development

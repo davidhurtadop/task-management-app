@@ -19,4 +19,10 @@ COPY .env /app/
 COPY ./src/ /app/src/
 
 # Set the entry point for the container
-CMD ["python", "-m", "src.main"]
+# CMD ["python", "-m", "src.main"]
+
+# Expose the port the Flask app will run on
+EXPOSE 5000
+
+# Specify the command to run the Flask app
+CMD ["flask", "run", "--host=0.0.0.0"]

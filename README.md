@@ -34,9 +34,9 @@ This is a Task Management application that allows users to create, read, update,
 - run it in a powershell terminal:
 
   ```bash
-  docker build -t task-management-app .
-  docker run -it -rm task-manager-app
-  # if you want to check the container run: docker run -it -rm task-manager-app bash
+  docker build -t task-management-app:dev .
+  docker run -p 5000:5000 --rm task-management-app:dev
+  # if you want to check the container run: docker run -it task-manager-app bash
   ```
 
 ### Run whole app

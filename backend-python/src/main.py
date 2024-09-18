@@ -17,7 +17,10 @@ def init_logger():
     app.logger = logger.get_logger()
 
 def init_db():
-    mongo_client = MongoDbClient(app.config["MONGO_DB_URI"], app.config["MONGO_DB_NAME"])
+    db_uri = app.config["MONGO_DB_URI"]
+    db_name = app.config["MONGO_DB_NAME"]
+    mongo_client = MongoDbClient(db_uri, db_name)
+    app.logger.debug(f"Connecting to MongoDB:{db_uri} - {db_name}")
     db = mongo_client.get_database()
     return db
 
@@ -36,7 +39,7 @@ def run():
     register_blueprints()
     
     print(app.url_map)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 
 if __name__ == "__main__":

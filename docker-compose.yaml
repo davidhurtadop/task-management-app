@@ -9,6 +9,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+
   api:
     build: ./backend-python
     container_name: task-manager-app
@@ -17,12 +18,12 @@ services:
     depends_on:
       - mongodb
     environment:
-      - MONGO_DB_URI=mongodb://root:example@localhost:27017/
+      - MONGO_DB_URI=mongodb://root:example@mongodb:27017/
       - MONGO_DB_NAME=task-manager-local-db
       - LOG_LEVEL=DEBUG
-      - SECRET_KEY ="95b706c3d5df34f945ff50b8fac97858c6a829a050f0a14afe5e7ec2dd7fb422"
-      - JWT_SECRET_KEY ="f6bb667eb8a9c21308bc512463a67bd700630b7eca804907c242736074913f0f"
-      - JWT_TOKEN_LOCATION = ['headers']
+      - SECRET_KEY=95b706c3d5df34f945ff50b8fac97858c6a829a050f0a14afe5e7ec2dd7fb422
+      - JWT_SECRET_KEY=f6bb667eb8a9c21308bc512463a67bd700630b7eca804907c242736074913f0f
+      - JWT_TOKEN_LOCATION=['headers']
 
 volumes:
   mongo-data:  # Named volume for MongoDB data persistence

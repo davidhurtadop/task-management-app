@@ -1,5 +1,5 @@
 # Use the official Python image from the Docker Hub
-FROM python:3.11-slim
+FROM python:3.12.5-slim
 
 # Set the working directory to /app/src before installing dependencies
 WORKDIR /app/src
@@ -14,15 +14,14 @@ RUN rm -rf requirements.txt
 
 WORKDIR /app
 
+# Use only when run docker build
+# COPY .env /app/
+
 # Copy the source code into the container
-COPY .env /app/
 COPY ./src/ /app/src/
 
-# Set the entry point for the container
-# CMD ["python", "-m", "src.main"]
-
-# Expose the port the Flask app will run on
+# Expose the port your Flask app listens on
 EXPOSE 5000
 
-# Specify the command to run the Flask app
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Set the entry point for the container
+CMD ["python", "-m", "src.main"]

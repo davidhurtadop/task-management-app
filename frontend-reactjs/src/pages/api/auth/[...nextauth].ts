@@ -1,5 +1,6 @@
 import NextAuth, { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import api from '../../../services/api'; // Adjust path if needed
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -10,20 +11,16 @@ export const authOptions: AuthOptions = {
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
-
         try {
-          const res = await fetch('http://localhost:5000/api/login', { // Replace with your API endpoint
-            method: 'POST',
-            body: JSON.stringify(credentials),
-            headers: { 'Content-Type': 'application/json' },
+          const response = await api.post('/users/login', { // Your login endpoint
+            email: credentials?.email,
+            password: credentials?.password,
           });
 
-          if (res.ok) {
-            const user = await res.json();
-            return user;
+          if (response.status === 200) {
+            const user = response.data;
+            // Store any necessary user data in the session (e.g., token, user ID)
+            return user; 
           } else {
             throw new Error('Invalid credentials');
           }
@@ -33,7 +30,7 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
-  // ... other NextAuth.js configurations ...
+  // ... other NextAuth.js configurations (e.g., session, callbacks) ...
 };
 
 export default NextAuth(authOptions);

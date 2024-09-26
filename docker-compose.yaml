@@ -24,6 +24,12 @@ services:
       - SECRET_KEY=95b706c3d5df34f945ff50b8fac97858c6a829a050f0a14afe5e7ec2dd7fb422
       - JWT_SECRET_KEY=f6bb667eb8a9c21308bc512463a67bd700630b7eca804907c242736074913f0f
       - JWT_TOKEN_LOCATION=['headers']
-
+  
+  app:  # New service for your frontend
+    build: ./frontend-reactjs  # Path to your frontend directory
+    ports:
+      - "3000:80"  # Map container port 80 to host port 3000
+    depends_on:
+      - api
 volumes:
   mongo-data:  # Named volume for MongoDB data persistence

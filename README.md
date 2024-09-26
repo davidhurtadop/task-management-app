@@ -83,7 +83,7 @@ This is a Task Management application that allows users to create, read, update,
 ### Week 1: Setup and Authentication
 
 - [x] Setup project structure and docker infrastructure.
-- [ ] Initialize backend and frontend projects.
+- [x] Initialize backend and frontend projects.
 - [ ] Create automatic build scripts.
 - [x] Implement user authentication and authorization.
 - [ ] Create clear README file with instructions to build/execute.

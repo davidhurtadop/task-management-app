@@ -33,7 +33,11 @@ class UserService:
         user = self.user_repo.find_by_email(email)
         if user and check_password_hash(user["password"], password):
             token = AuthService.generate_token(user["id"])
-            return response.create_response(200, "Login Successful", f"JWT: {token}")
+            details = {
+                "id": user["id"],
+                "token": token
+            }
+            return response.create_response(200, "Ok", "Login Successfull", details)
         return response.create_response(401, "Login Failed", "Invalid credentials")
 
 

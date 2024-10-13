@@ -15,7 +15,7 @@ RUN rm -rf requirements.txt
 WORKDIR /app
 
 # Use only when run docker build
-# COPY .env /app/
+COPY .env /app/
 
 # Copy the source code into the container
 COPY ./src/ /app/src/

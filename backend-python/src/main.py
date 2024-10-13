@@ -1,13 +1,27 @@
-from flask import Flask
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+
 from src.routes.user import UserRoutes
 from src.routes.task import TaskRoutes
 from src.clients.mongodb import MongoDbClient
 from src.utils.config import settings
 from src.utils.logging import LoggerFactory
-from flask_jwt_extended import JWTManager
 
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True)
+
+@app.before_request
+def before_request():
+    """Handles CORS preflight requests."""
+    if request.method == 'OPTIONS':
+        response = jsonify({})
+        # response.headers.add('Access-Control-Allow-Origin', 'http://0.0.0.0')  # Replace with your frontend origin
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        # response.headers.add('Access-Control-Allow-Credentials', 'true')
+        return response, 200
 
 def configure_app():
     app.config.from_object(settings)

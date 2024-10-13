@@ -11,7 +11,7 @@ class TaskRoutes:
         self.routes()
 
     def routes(self):
-        @self.blueprint.route("/", methods=["POST"])
+        @self.blueprint.route("/create", methods=["POST"])
         @token_required
         def create_task():
             data = request.get_json()
@@ -22,20 +22,24 @@ class TaskRoutes:
         @self.blueprint.route("/<task_id>", methods=["GET"])
         @token_required
         def get_task(task_id):
-            return self.task_service.get_task_by_id(task_id)
+            user_id = request.user_id
+            return self.task_service.get_task_by_id(task_id, user_id)
 
         @self.blueprint.route("/<task_id>", methods=["PUT"])
         @token_required
         def update_task(task_id):
             update_data = request.get_json()
-            return self.task_service.update_task(task_id, update_data)
+            user_id = update_data.user_id
+            return self.task_service.update_task(task_id, update_data, user_id)
 
         @self.blueprint.route("/<task_id>", methods=["DELETE"])
         @token_required
         def delete_task(task_id):
-            return self.task_service.delete_task(task_id)
+            user_id = request.user_id
+            return self.task_service.delete_task(task_id, user_id)
 
-        @self.blueprint.route("/user/<user_id>", methods=["GET"])
+        @self.blueprint.route("/", methods=["GET"])
         @token_required
-        def get_tasks_by_user(user_id):
+        def get_tasks():
+            user_id = request.user_id
             return self.task_service.get_tasks_by_user(user_id)

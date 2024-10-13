@@ -36,21 +36,40 @@ This is a Task Management application that allows users to create, read, update,
   ```bash
   docker build -t task-management-app:dev .
   docker run -p 5000:5000 --rm task-management-app:dev
-  # if you want to check the container run: docker run -it task-manager-app bash
+  # if you want to check the container run:
+  docker run -it task-manager-app bash
   ```
+- Go to Postman and send a request to `http://localhost:5000/<endpoints_url>`
 
+
+## BackEnd
+
+### Run locally
+
+- Locate on the `frontend-nextjs/` folder
+- run it in a powershell terminal:
+
+  ```bash
+  npm run dev
+  ```
+- Go to a browser and type `http://localhost:3000`
 ### Run whole app
 
 - Locate on the path where `docker-compose.yaml` file is created and run:
 
-  ```bash
+  ```shell
   docker-compose up -d
   ```
 
 - Create the local db and collections using this `backend-python/tests/mongodb/playground.js` file.
 
-## Functional Requirements
+## Connect to Mongodb
+this is the connection string:
+```mongodb-json
+mongodb+srv://encora:z8Y4ldYp4vhjtva7@projects-cluster.fncm0.mongodb.net/
+```
 
+## Functional Requirements
 - User Authentication and Authorization
   - Users can sign up, log in, and log out.
   - Passwords must be stored securely.

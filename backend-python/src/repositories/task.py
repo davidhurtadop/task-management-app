@@ -10,3 +10,14 @@ class TaskRepository(BaseRepository):
     
     def find_by_title(self, title: str):
         return list(self.collection.find({"title": title}))
+    
+    def find_by_id_user(self, task_id: UUID, user_id: UUID):
+        return list(self.collection.find({"id": str(task_id), "user_id": str(user_id)}))
+    
+    def update_one_by_user(self, task_id: UUID, update_data: dict,user_id: UUID):
+        result = self.collection.update_one({"id": str(task_id), "user_id": str(user_id)}, {"$set": update_data})
+        return result
+    
+    def delete_one_by_user(self, task_id: UUID, user_id: UUID):
+        result = self.collection.delete_one({"id": str(task_id), "user_id": str(user_id)})
+        return result

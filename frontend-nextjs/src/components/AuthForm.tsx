@@ -5,8 +5,9 @@ import { Button, Input, Spacer } from '@nextui-org/react';
 import api from '../services/api';
 import { useRouter } from 'next/navigation';
 import { MailIcon } from '../styles/MailIcon';
-import {EyeFilledIcon} from "../styles/EyeFilledIcon";
-import {EyeSlashFilledIcon} from "../styles/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../styles/EyeFilledIcon";
+import { LockIcon } from '../styles/LockIcon';
+import { EyeSlashFilledIcon } from "../styles/EyeSlashFilledIcon";
 
 interface AuthFormProps {
   onAuthSuccess: () => void;
@@ -15,6 +16,7 @@ interface AuthFormProps {
 const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
@@ -26,15 +28,21 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess }) => {
     event.preventDefault();
 
     try {
-      const endpoint = isLogin ? '/auth/login' : '/auth/signup';
-      const response = await api.post(endpoint, { email, password });
+      const endpoint = isLogin ? '/users/login' : '/users/register';
+      const response = isLogin ? await api.post(endpoint, { email, password }) :
+                                 await api.post(endpoint, { username, email, password });
+      var token = '';
+      var user_id = '';
 
       if (response.status === 200) {
         // Assuming your API returns a token on successful login/signup
-        const token = response.data.token;
+        token = response.data.details.token;
+        user_id = response.data.details.id;
+
+        localStorage.setItem('user', user_id);
         localStorage.setItem('token', token);
-        onAuthSuccess(); // Notify parent component about successful auth
-        router.push('/tasks'); // Redirect to the tasks page
+        console.log('Authentication success...', response.data);
+        onAuthSuccess(); // Notify parent component about successfull auth
       } else {
         console.error('Authentication failed:', response.data);
         // Handle authentication error (e.g., display error message)
@@ -43,6 +51,19 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess }) => {
       console.error('An error occurred during authentication:', error);
       // Handle network or other errors
     }
+
+    try{
+      // Check if the user has tasks
+      const tasksResponse = await api.get('/tasks');
+      console.log('Getting tasks', tasksResponse.data);
+
+      router.push('/tasks'); // Redirect to /tasks if tasks exist
+
+    } catch (error) {
+      console.error('An error occurred during redirecting:', error);
+      // Handle network or other errors
+    }
+
   };
 
   return (
@@ -55,6 +76,21 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess }) => {
           {isLogin ? 'Login' : 'Sign Up'}
         </h2>
 
+        {!isLogin ?
+        <div className="mb-4"> {/* Username Input */}
+          <Input
+            isClearable
+            type="username"
+            label="Usename"
+            variant="bordered"
+            placeholder="Enter your full name"
+            onChange={(e) => setUsername(e.target.value)}
+            onClear={() => console.log("input cleared")}
+            className="w-full"
+          />
+        </div> : null
+        }
+
         <div className="mb-4"> {/* Email Input */}
           <Input
             isClearable
@@ -62,7 +98,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess }) => {
             label="Email"
             variant="bordered"
             placeholder="Enter your email"
-            defaultValue="my-email@encora.com"
             onChange={(e) => setEmail(e.target.value)}
             onClear={() => console.log("input cleared")}
             startContent={
@@ -94,6 +129,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess }) => {
               </button>
             }
             type={isVisible ? "text" : "password"}
+            startContent={
+              <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+            }
             className="w-full" 
             required
           />

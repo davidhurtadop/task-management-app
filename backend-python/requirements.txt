@@ -1,5 +1,6 @@
 Flask
 Flask-JWT-Extended
+flask-cors
 pymongo[srv]
 pytest
 pydantic
